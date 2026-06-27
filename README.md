@@ -1,182 +1,340 @@
-# 🚀 ResumeIQ – AI-Powered Resume Analyzer
+# 🚀 ResumeIQ - AI-Powered Resume Analyzer
 
-ResumeIQ is an intelligent web application that analyzes resumes against job descriptions using **AI + NLP**, evaluates **ATS (Applicant Tracking System) compatibility**, and provides actionable improvement suggestions powered by **Google Gemini AI**.
+<div align="center">
 
-It helps job seekers optimize resumes to increase interview selection chances.
+![Python](https://img.shields.io/badge/Python-3.13-blue?style=for-the-badge\&logo=python)
+![Flask](https://img.shields.io/badge/Flask-Web_App-black?style=for-the-badge\&logo=flask)
+![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?style=for-the-badge\&logo=sqlite)
+![Gemini](https://img.shields.io/badge/Google-Gemini_AI-4285F4?style=for-the-badge\&logo=google)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
----
+**An AI-powered Resume Analysis Platform that evaluates resumes using ATS scoring, semantic similarity, skill-gap detection, and Google Gemini AI.**
 
-## ✨ Features
-
-- 📄 Upload resume (PDF only)
-- 🧠 Extract structured text using PyMuPDF
-- 💬 AI-powered analysis using Google Gemini API
-- 📊 ATS score generation with weighted scoring system
-- 🧩 Skill extraction (technical + soft skills)
-- 🔍 Job Description vs Resume matching
-- 📈 Personalized improvement suggestions
-- 📋 Interactive dashboard with visual insights
+</div>
 
 ---
 
-## 🏗️ Tech Stack
+# 📖 Overview
 
-### 🔹 Frontend
-| Technology | Purpose |
-|------------|--------|
-| HTML       | Structure of UI |
-| CSS        | Styling and layout |
-| JavaScript | Dynamic dashboard & interactions |
+ResumeIQ is an intelligent resume analysis platform built using **Flask**, **SQLite**, and **Google Gemini AI**. It helps job seekers evaluate how well their resumes match a given job description by combining traditional ATS techniques with AI-powered analysis.
 
-### 🔹 Backend
-| Technology | Purpose |
-|------------|--------|
-| Python     | Core backend logic |
-| Flask      | Web framework & routing |
+Instead of relying only on keyword matching, ResumeIQ performs:
 
-### 🔹 AI / Machine Learning
-| Technology | Purpose |
-|------------|--------|
-| Google Gemini API | Resume analysis, skill extraction, JD matching |
-| NLP Techniques | Text similarity & keyword extraction |
-| TF-IDF | Resume–JD similarity scoring |
-
-### 🔹 PDF Processing
-| Technology | Purpose |
-|------------|--------|
-| PyMuPDF (fitz) | Extract text from uploaded PDF resumes |
+* AI Resume Parsing
+* Semantic Resume Matching
+* ATS Score Calculation
+* Skill Gap Detection
+* AI-Based Resume Feedback
+* Resume Analysis History
 
 ---
 
-## 🧠 How It Works
+# ✨ Features
 
-1. User uploads a **PDF resume**
-2. Job Description is entered in a text box
-3. Resume text is extracted using **PyMuPDF**
-4. Backend processes data and sends it to **Gemini AI**
-5. AI extracts:
-   - Skills
-   - Experience level
-   - Education
-   - Projects
-   - Strengths & weaknesses
-6. ATS score is computed using weighted algorithm
-7. Results are displayed in a dashboard with visual insights
+### 👤 Authentication
+
+* User Registration
+* Secure Login
+* Password Hashing
+* Session Management
 
 ---
 
-## 📊 ATS Scoring System
+### 📄 Resume Processing
 
-| Component         | Weight (%) |
-|------------------|------------|
-| TF-IDF Similarity| 40%        |
-| Skill Match      | 30%        |
-| Projects         | 10%        |
-| Experience       | 10%        |
-| Education        | 5%         |
-| Certifications   | 5%         |
-| **Total**        | **100%**   |
+* Upload PDF Resume
+* Extract Resume Text
+* Resume Information Parsing
+* Candidate Information Extraction
 
 ---
 
-## 📁 Project Structure
-RESUMEIQ/
+### 🤖 AI Analysis
+
+Powered by **Google Gemini AI**
+
+ResumeIQ extracts:
+
+* Skills
+* Projects
+* Experience
+* Education
+* Certifications
+
+It also generates:
+
+* Resume Strengths
+* Resume Weaknesses
+* Missing Skills
+* Personalized Recommendations
+* Overall Resume Summary
+
+---
+
+### 📊 ATS Score
+
+ResumeIQ calculates an ATS score using multiple factors:
+
+| Factor                 | Weight    |
+| ---------------------- | --------- |
+| Resume Similarity      | 40%       |
+| Skill Match            | 30%       |
+| Projects               | 10%       |
+| Experience             | 10%       |
+| Education              | 5%        |
+| Certifications         | 5%        |
+| Missing Skills Penalty | Up to -20 |
+
+---
+
+### 📈 Dashboard
+
+Interactive dashboard showing:
+
+* ATS Score
+* Resume Match Score
+* Skill Match Analysis
+* ATS Breakdown
+* Resume Recommendations
+* Analysis Charts
+
+---
+
+### 📚 Analysis History
+
+Each resume analysis is stored for future reference.
+
+Users can view:
+
+* Job Role
+* ATS Score
+* Similarity Score
+* Analysis Date
+* Previous Results
+
+---
+
+# 🏗️ Project Structure
+
+```text
+ResumeIQ/
+│
+├── app.py
 │
 ├── database/
-│   ├── database.db
 │   ├── database.py
 │   ├── save_analysis.py
-│   └── schema.sql
+│   ├── schema.sql
+│   └── database.db (generated locally)
 │
 ├── routes/
-│   ├── analysis.py
 │   ├── auth.py
-│   └── dashboard.py
+│   ├── dashboard.py
+│   ├── analysis.py
+│   └── history.py
 │
 ├── services/
-│   ├── ats_service.py
-│   ├── gemini_service.py
 │   ├── pdf_parser.py
-│   └── similarity.py
+│   ├── gemini_service.py
+│   ├── similarity.py
+│   └── ats_service.py
 │
 ├── static/
 │   ├── css/
-│   │   ├── auth.css
-│   │   └── dashboard.css
 │   └── js/
-│       └── dashboard.js
 │
 ├── templates/
-│   ├── dashboard.html
-│   ├── login.html
-│   └── register.html
 │
 ├── uploads/
-├── app.py
+│
 ├── requirements.txt
-├── .env
-└── .gitignore
+│
+└── README.md
+```
 
 ---
 
-## ⚙️ Installation & Setup
+# 🛠️ Tech Stack
 
-### 1️⃣ Clone Repository
-git clone https://github.com/your-username/resumeiq.git
-cd resumeiq
+### Backend
+
+* Python
+* Flask
+
+### Database
+
+* SQLite
+
+### AI
+
+* Google Gemini API
+
+### Machine Learning
+
+* TF-IDF Vectorizer
+* Cosine Similarity
+
+### Frontend
+
+* HTML5
+* CSS3
+* JavaScript
+* Bootstrap Icons
+* Plotly.js
+
+### Libraries
+
+* PyMuPDF
+* Scikit-learn
+* Werkzeug
 
 ---
 
-### 2️⃣ Create Virtual Environment
-python -m venv venv
+# ⚙️ Installation
 
-Windows:
-venv\Scripts\activate
+## Clone Repository
 
-Mac/Linux:
-source venv/bin/activate
+```bash
+git clone https://github.com/yourusername/ResumeIQ.git
+
+cd ResumeIQ
+```
 
 ---
 
-### 3️⃣ Install Dependencies
+## Create Virtual Environment
+
+```bash
+python -m venv .venv
+```
+
+Activate environment
+
+Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+Linux / macOS
+
+```bash
+source .venv/bin/activate
+```
+
+---
+
+## Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
 ---
 
-### 4️⃣ Configure Environment Variables
+## Configure Gemini API
 
-Create a `.env` file:
+Create a `.env` file
 
-GEMINI_API_KEY=your_api_key_here
+```env
+GEMINI_API_KEY=YOUR_API_KEY
+```
 
 ---
 
-### 5️⃣ Run Application
+## Initialize Database
+
+```bash
 python app.py
+```
 
 ---
 
-## 🌐 Open in Browser
+## Run Application
+
+```bash
+python app.py
+```
+
+Open:
+
+```
 http://127.0.0.1:5000
+```
 
 ---
 
-## 📌 Future Improvements
+# 📊 Workflow
 
-- JWT-based authentication system  
-- Advanced analytics dashboard  
-- Multi-language resume support  
-- Multi-model AI comparison (Gemini + OpenAI)  
-- Cloud deployment (AWS / Render)
+```text
+User Uploads Resume
+        │
+        ▼
+Extract PDF Text
+        │
+        ▼
+Gemini Resume Parsing
+        │
+        ▼
+Semantic Similarity
+        │
+        ▼
+ATS Score Calculation
+        │
+        ▼
+AI Recommendation
+        │
+        ▼
+Save Analysis
+        │
+        ▼
+Dashboard + Charts
+```
+
 ---
 
-👨‍💻 Developed By
-Devansh Mankad
-GitHub: https://github.com/Devansh-Mankad
+# 📸 Screenshots
 
-----
+Add screenshots here:
 
-## 📜 License
+* Login Page
+* Registration Page
+* Dashboard
+* ATS Result
+* Charts
+* History Page
+
+---
+
+# 🎯 Future Enhancements
+
+* Resume PDF Report Export
+* Resume Optimization Suggestions
+* Multiple Resume Comparison
+* Recruiter Dashboard
+* AI Resume Builder
+* Cover Letter Generator
+* Interview Question Generator
+* Email Resume Sharing
+* Cloud Database Support
+
+---
+
+# 👨‍💻 Author
+
+**Devansh Mankad**
+
+Computer Engineering Student
+
+* GitHub: https://github.com/Devansh-Mankad
+---
+
+# ⭐ Support
+
+If you found this project useful, consider giving it a **⭐ Star** on GitHub.
+
+---
+
+# 📄 License
+
 This project is licensed under the MIT License.
-
-⭐ If you found this project useful, consider giving it a star on GitHub!
