@@ -1,6 +1,6 @@
 PRAGMA foreign_keys = ON;
 
--- USERS TABLE
+-- USERS
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     full_name TEXT NOT NULL,
@@ -9,12 +9,13 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- RESUMES TABLE
+-- RESUMES
 CREATE TABLE IF NOT EXISTS resumes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     file_name TEXT NOT NULL,
     file_path TEXT NOT NULL,
+    resume_text TEXT,
     candidate_name TEXT,
     email TEXT,
     phone TEXT,
@@ -22,7 +23,7 @@ CREATE TABLE IF NOT EXISTS resumes (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- JOB DESCRIPTIONS TABLE
+-- JOB DESCRIPTIONS
 CREATE TABLE IF NOT EXISTS job_descriptions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -33,7 +34,7 @@ CREATE TABLE IF NOT EXISTS job_descriptions (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- EXTRACTED SKILLS TABLE
+-- EXTRACTED SKILLS
 CREATE TABLE IF NOT EXISTS extracted_skills (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     resume_id INTEGER NOT NULL,
@@ -43,7 +44,7 @@ CREATE TABLE IF NOT EXISTS extracted_skills (
     FOREIGN KEY (resume_id) REFERENCES resumes(id) ON DELETE CASCADE
 );
 
--- ANALYSIS RESULTS TABLE
+-- ANALYSIS RESULTS
 CREATE TABLE IF NOT EXISTS analysis_results (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -57,13 +58,15 @@ CREATE TABLE IF NOT EXISTS analysis_results (
     strengths TEXT,
     weaknesses TEXT,
     recommendations TEXT,
+    overall_summary TEXT,
+    score_breakdown TEXT,
     analyzed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (resume_id) REFERENCES resumes(id) ON DELETE CASCADE,
     FOREIGN KEY (job_description_id) REFERENCES job_descriptions(id) ON DELETE CASCADE
 );
 
--- ANALYSIS HISTORY TABLE
+-- ANALYSIS HISTORY
 CREATE TABLE IF NOT EXISTS analysis_history (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -72,3 +75,19 @@ CREATE TABLE IF NOT EXISTS analysis_history (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (analysis_result_id) REFERENCES analysis_results(id) ON DELETE CASCADE
 );
+
+-- INDEXES : For fast processing
+CREATE INDEX IF NOT EXISTS idx_users_email
+ON users(email);
+
+CREATE INDEX IF NOT EXISTS idx_resume_user
+ON resumes(user_id);
+
+CREATE INDEX IF NOT EXISTS idx_job_user
+ON job_descriptions(user_id);
+
+CREATE INDEX IF NOT EXISTS idx_analysis_user
+ON analysis_results(user_id);
+
+CREATE INDEX IF NOT EXISTS idx_history_user
+ON analysis_history(user_id);
