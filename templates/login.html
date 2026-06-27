@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | ResumeIQ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+
+<body>
+<div class="container">
+    <div class="left-panel">
+        <h1>ResumeIQ</h1>
+        <p>
+            AI-Powered Resume Analyzer & Job Match Platform
+        </p>
+        <ul>
+            <li>✔ ATS Resume Analysis</li>
+            <li>✔ Skill Gap Detection</li>
+            <li>✔ Resume & Job Matching</li>
+            <li>✔ AI Career Suggestions</li>
+        </ul>
+    </div>
+
+    <div class="right-panel">
+        <h2>Welcome Back 👋</h2>
+        <p class="subtitle">
+            Login to continue analyzing your resumes.
+        </p>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert {{category}}">
+                    {{message}}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <div class="input-box">
+                <label>Email Address</label>
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required>
+            </div>
+
+            <div class="input-box">
+                <label>Password</label>
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required>
+            </div>
+
+            <button class="login-btn">
+                Login
+            </button>
+        </form>
+
+        <div class="bottom-text">
+            Don't have an account?
+            <a href="/register">
+                Create Account
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

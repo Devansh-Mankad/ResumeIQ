@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | ResumeIQ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+<div class="dashboard-container">
+    <aside class="sidebar">
+        <div class="logo">
+            <h2>Resume<span>IQ</span></h2>
+            <p>AI Resume Analyzer</p>
+        </div>
+
+        <nav>
+            <a href="/dashboard" class="active">
+                <i class="bi bi-grid-fill"></i>
+                Dashboard
+            </a>
+            <a href="/history">
+                <i class="bi bi-clock-history"></i>
+                Analysis History
+            </a>
+
+            <a href="/profile">
+                <i class="bi bi-person-circle"></i>
+                Profile
+            </a>
+
+            <a href="/logout">
+                <i class="bi bi-box-arrow-right"></i>
+                Logout
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div>
+                <h1>Dashboard</h1>
+                <p>AI-Powered Resume Analysis Platform</p>
+            </div>
+
+            <div class="user-box">
+                <i class="bi bi-person-circle"></i>
+                <span>{{ session.full_name }}</span>
+            </div>
+        </header>
+
+        <section class="welcome-card">
+            <div>
+                <h2>
+                    Welcome back,
+                    {{ session.full_name }}
+                    👋
+                </h2>
+
+                <p>
+                    Upload your resume and compare it against any job description
+                    to receive ATS scores, skill gap analysis, and AI-powered
+                    recommendations.
+                </p>
+            </div>
+        </section>
+
+        <form action="/analyze" method="POST" enctype="multipart/form-data">
+            <div class="input-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-file-earmark-pdf-fill"></i>
+                        Resume Upload
+                    </div>
+
+                    <div class="card-body">
+                        <label>Select Resume (PDF)</label>
+                        <input type="file" name="resume" accept=".pdf" required>
+                        <small>
+                            Supported format: PDF
+                        </small>
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-briefcase-fill"></i>
+                        Job Description
+                    </div>
+
+                    <div class="card-body">
+                        <label>Paste Job Description</label>
+
+                        <textarea
+                            name="job_description"
+                            rows="12"
+                            placeholder="Paste the complete job description here..."
+                            required></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analyze-section">
+                <button
+                    type="submit"
+                    class="analyze-btn">
+                    <i class="bi bi-stars"></i>
+                    Analyze Resume
+                </button>
+            </div>
+        </form>
+
+        {% if analysis %}
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="bi bi-speedometer2"></i>
+                </div>
+
+                <div>
+                    <h3>ATS Score</h3>
+                    <h2>{{ analysis.ats_score }}%</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="bi bi-bullseye"></i>
+                </div>
+
+                <div>
+                    <h3>Resume Match</h3>
+                    <h2>{{ analysis.similarity_score }}%</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon purple">
+                    <i class="bi bi-award-fill"></i>
+                </div>
+
+                <div>
+                    <h3>Overall Score</h3>
+                    <h2>{{ analysis.overall_score }}%</h2>
+                </div>
+            </div>
+        </section>
+
+        <section class="result-grid">
+            <div class="result-card">
+                <h2>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Matched Skills
+                </h2>
+
+                <div class="skill-container">
+                    {% for skill in analysis.matched_skills %}
+                    <span class="skill matched">
+                        {{ skill }}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="result-card">
+                <h2>
+                    <i class="bi bi-x-circle-fill"></i>
+                    Missing Skills
+                </h2>
+
+                <div class="skill-container">
+                    {% for skill in analysis.missing_skills %}
+                    <span class="skill missing">
+                        {{ skill }}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="analysis-grid">
+            <div class="analysis-card">
+                <h2>
+                    💪 Strengths
+                </h2>
+                <p>
+                    {{ analysis.strengths }}
+                </p>
+            </div>
+
+            <div class="analysis-card">
+                <h2>
+                    ⚠ Weaknesses
+                </h2>
+                <p>
+                    {{ analysis.weaknesses }}
+
+                </p>
+            </div>
+        </section>
+
+        <section class="recommendation-card">
+            <h2>
+                🤖 AI Resume Recommendations
+            </h2>
+            <p>
+                {{ analysis.recommendations }}
+            </p>
+        </section>
+
+        <section class="chart-grid">
+            <div class="chart-card">
+                <h3>
+                    ATS Score Distribution
+                </h3>
+
+                <div id="atsChart">
+                    Plotly Chart Here
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>
+                    Skill Analysis
+                </h3>
+
+                <div id="skillChart">
+                    Plotly Chart Here
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        <section class="history-card">
+            <div class="section-header">
+                <h2>
+                    <i class="bi bi-clock-history"></i>
+                    Recent Analysis
+                </h2>
+                <a href="/history" class="view-all">
+                    View All
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Job Role</th>
+                        <th>ATS Score</th>
+                        <th>Match %</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    {% if history %}
+                        {% for item in history %}
+                        <tr>
+                            <td>
+                                <strong>{{ item.job_title }}</strong>
+                            </td>
+                            <td>
+                                {{ item.ats_score }}%
+                            </td>
+                            <td>
+                                {{ item.similarity_score }}%
+                            </td>
+                            <td>
+                                {{ item.created_at }}
+                            </td>
+                            <td>
+                                {% if item.ats_score >= 80 %}
+                                <span class="badge success">
+                                    Excellent
+                                </span>
+                                {% elif item.ats_score >= 60 %}
+                                <span class="badge warning">
+                                    Good
+                                </span>
+                                {% else %}
+                                <span class="badge danger">
+                                    Needs Improvement
+                                </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align:center;padding:40px;">
+                            <i class="bi bi-file-earmark-text"
+                            style="font-size:45px;color:#9CA3AF;"></i>
+                            <br><br>
+                            No analysis available yet.
+                            <br>
+                            Upload a resume to get started.
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </section>
+
+        <div id="loading">
+            <div class="loading-box">
+                <div class="loader"></div>
+                <h2>
+                    AI is analyzing your resume...
+                </h2>
+
+                <p>
+                    Please wait while ResumeIQ extracts your resume,
+                    calculates ATS score,
+                    compares it with the Job Description
+                    and generates AI recommendations.
+                </p>
+            </div>
+        </div>
+
+        <script>
+        const form=document.querySelector("form");
+        const loading=document.getElementById("loading");
+        loading.style.display="none";
+        form.addEventListener("submit",function(){
+            loading.style.display="flex";
+
+        });
+        </script>
+    </main>
+
+</div>
+</body>
+</html>
