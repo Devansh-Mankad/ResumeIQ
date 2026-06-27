@@ -308,7 +308,12 @@ Add screenshots here:
 
 
 * ATS Result
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/48c56565-1e1d-4549-bc9a-361ebc892dc6" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/cd25298a-2cb3-4fdc-9b5e-de6d49a2b7c3" />
+ 
 * Charts
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/089b51d2-e111-4e0a-9b5b-b8acb8672d79" />
+
 * History Page
 <img width="1530" height="638" alt="image" src="https://github.com/user-attachments/assets/c55723d3-8b6b-4a9f-9c96-d169fbf27556" />
 
