@@ -169,11 +169,11 @@ http://127.0.0.1:5000
 - Multi-model AI comparison (Gemini + OpenAI)  
 - Cloud deployment (AWS / Render)
 
----
-
-## 👨‍💻 Developed by
-Devansh Mankad 
----
+👨‍💻 Developed By
+Devansh Mankad
+GitHub: https://github.com/Devansh-Mankad
 
 ## 📜 License
 This project is licensed under the MIT License.
+
+⭐ If you found this project useful, consider giving it a star on GitHub!
