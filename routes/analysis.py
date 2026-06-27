@@ -92,6 +92,7 @@ def analyze():
         # Load Previous Analysis History
         conn = get_db_connection()
         cursor = conn.cursor()
+
         cursor.execute(
             """
             SELECT
@@ -102,21 +103,39 @@ def analyze():
             FROM analysis_results ar
             JOIN job_descriptions jd
                 ON ar.job_description_id = jd.id
-            WHERE ar.user_id = ?
+            WHERE ar.user_id=?
             ORDER BY ar.analyzed_at DESC
             LIMIT 5
             """,
             (session["user_id"],)
         )
-
         history = cursor.fetchall()
+
+        # Prepare Chart Data
+        chart_data = {
+            "ats": ats_result["ats_score"],
+            "matched": len(analysis_data.get("matched_skills", [])),
+            "missing": len(analysis_data.get("missing_required_skills", [])),
+            "breakdown": ats_result["breakdown"]
+        }
+
+        history_chart = []
+        for row in history:
+            history_chart.append({
+                "job": row["job_role"],
+                "score": row["ats_score"],
+                "similarity": row["similarity_score"],
+                "date": row["analyzed_at"]
+            })
         conn.close()
 
         # Render Dashboard
         return render_template(
             "dashboard.html",
             analysis=analysis_result,
-            history=history
+            history=history,
+            chart_data=chart_data,
+            history_chart=history_chart
         )
     
     except Exception as e:
