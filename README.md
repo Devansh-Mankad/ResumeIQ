@@ -298,11 +298,20 @@ Dashboard + Charts
 Add screenshots here:
 
 * Login Page
+<img width="1903" height="918" alt="image" src="https://github.com/user-attachments/assets/ba69d8be-cd3a-44e1-bc2d-76a1e34cf212" />
+ 
 * Registration Page
+<img width="1900" height="922" alt="image" src="https://github.com/user-attachments/assets/d1a30b84-ddba-4945-9b54-73692e0a7f61" />
+
 * Dashboard
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/fb10a6a4-15c1-4ab4-9243-f4a7f82f6a4a" />
+
+
 * ATS Result
 * Charts
 * History Page
+<img width="1530" height="638" alt="image" src="https://github.com/user-attachments/assets/c55723d3-8b6b-4a9f-9c96-d169fbf27556" />
+
 
 ---
 
