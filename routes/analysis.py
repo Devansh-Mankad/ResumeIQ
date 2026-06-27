@@ -1,26 +1,34 @@
 from flask import Blueprint,request,render_template,redirect,url_for,session,flash
 import os
 from werkzeug.utils import secure_filename
+
 from database.database import get_db_connection
 from database.save_analysis import save_analysis
+
 from services.pdf_parser import extract_resume_text
 from services.gemini_service import extract_resume_information,analyze_resume
 from services.similarity import calculate_similarity
 from services.ats_service import calculate_ats_score
 
 analysis = Blueprint("analysis", __name__)
+
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+
 @analysis.route("/analyze", methods=["POST"])
 def analyze():
+
     # Authentication
     if "user_id" not in session:
         return redirect(url_for("auth.login"))
 
     # Get Form Data
     resume = request.files.get("resume")
-    job_description = request.form.get("job_description","").strip()
+    job_description = request.form.get(
+        "job_description",
+        ""
+    ).strip()
 
     # Validation
     if not resume:
@@ -40,30 +48,47 @@ def analyze():
         return redirect(url_for("dashboard.dashboard_page"))
 
     try:
+
         # Save Uploaded Resume
         filename = secure_filename(resume.filename)
-        filepath = os.path.join(UPLOAD_FOLDER,filename)
+        filepath = os.path.join(
+            UPLOAD_FOLDER,
+            filename
+        )
         resume.save(filepath)
 
         # Extract Resume Text
         resume_text = extract_resume_text(filepath)
+
         if not resume_text.strip():
             flash("Unable to extract text from PDF.", "danger")
             return redirect(url_for("dashboard.dashboard_page"))
 
         # Gemini Resume Parsing
-        resume_data = extract_resume_information(resume_text)
+        resume_data = extract_resume_information(
+            resume_text
+        )
 
         # Gemini Resume Analysis
-        analysis_data = analyze_resume(resume_data,job_description)
+        analysis_data = analyze_resume(
+            resume_data,
+            job_description
+        )
 
         # Similarity Score
-        similarity_score = calculate_similarity(resume_text,job_description)
+        similarity_score = calculate_similarity(
+            resume_text,
+            job_description
+        )
 
         # ATS Score
-        ats_result = calculate_ats_score(similarity_score,resume_data,analysis_data)
+        ats_result = calculate_ats_score(
+            similarity_score,
+            resume_data,
+            analysis_data
+        )
 
-        # Save Database
+        # Save Analysis
         save_analysis(
             user_id=session["user_id"],
             resume_filename=filename,
@@ -78,15 +103,48 @@ def analyze():
 
         # Dashboard Result
         analysis_result = {
-            "ats_score": ats_result["ats_score"],
-            "similarity_score": similarity_score,
-            "matched_skills": analysis_data.get("matched_skills",[]),
-            "missing_skills": analysis_data.get("missing_required_skills",[]),
-            "strengths": analysis_data.get("strengths",[]),
-            "weaknesses": analysis_data.get("weaknesses",[]),
-            "recommendations": analysis_data.get("recommendations",[]),
-            "overall_summary": analysis_data.get("overall_summary",""),
-            "breakdown": ats_result.get("breakdown",{})
+            "ats_score":
+                ats_result["ats_score"],
+            "similarity_score":
+                similarity_score,
+            "matched_skills":
+                analysis_data.get(
+                    "matched_skills",
+                    []
+                ),
+            "missing_skills":
+                analysis_data.get(
+                    "missing_required_skills",
+                    analysis_data.get(
+                        "missing_skills",
+                        []
+                    )
+                ),
+            "strengths":
+                analysis_data.get(
+                    "strengths",
+                    []
+                ),
+            "weaknesses":
+                analysis_data.get(
+                    "weaknesses",
+                    []
+                ),
+            "recommendations":
+                analysis_data.get(
+                    "recommendations",
+                    []
+                ),
+            "overall_summary":
+                analysis_data.get(
+                    "overall_summary",
+                    ""
+                ),
+            "breakdown":
+                ats_result.get(
+                    "breakdown",
+                    {}
+                )
         }
 
         # Load Previous Analysis History
@@ -113,19 +171,30 @@ def analyze():
 
         # Prepare Chart Data
         chart_data = {
-            "ats": ats_result["ats_score"],
-            "matched": len(analysis_data.get("matched_skills", [])),
-            "missing": len(analysis_data.get("missing_required_skills", [])),
-            "breakdown": ats_result["breakdown"]
+            "ats":
+                ats_result["ats_score"],
+            "matched":
+                len(
+                    analysis_result["matched_skills"]
+                ),
+            "missing":
+                len(
+                    analysis_result["missing_skills"]
+                ),
+            "breakdown":
+                ats_result["breakdown"]
         }
-
         history_chart = []
         for row in history:
             history_chart.append({
-                "job": row["job_role"],
-                "score": row["ats_score"],
-                "similarity": row["similarity_score"],
-                "date": row["analyzed_at"]
+                "job":
+                    row["job_role"],
+                "score":
+                    row["ats_score"],
+                "similarity":
+                    row["similarity_score"],
+                "date":
+                    row["analyzed_at"]
             })
         conn.close()
 
@@ -137,8 +206,8 @@ def analyze():
             chart_data=chart_data,
             history_chart=history_chart
         )
-    
+
     except Exception as e:
-        print(e)
+        print("Resume Analysis Error :", e)
         flash("Resume analysis failed. Please try again.","danger")
         return redirect(url_for("dashboard.dashboard_page"))

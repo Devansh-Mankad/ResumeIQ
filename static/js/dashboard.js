@@ -1,155 +1,208 @@
-// Stop if no analysis has been performed yet
-if (typeof chartData !== "undefined" && chartData && Object.keys(chartData).length > 0) {
-    // ATS SCORE GAUGE
+if (typeof chartData !== "undefined" && Object.keys(chartData).length > 0) {
+    // ATS Gauge
     Plotly.newPlot(
         "atsGauge",
-        [
-            {
-                type: "indicator",
-                mode: "gauge+number",
-                value: chartData.ats,
-                number: {suffix: "%"},
-                title: {text: "Overall ATS Score"},
-                gauge: {
-                    axis: {
-                        range: [0, 100]
-                    },
-                    bar: {
-                        color: "#4F46E5"
-                    },
-                    steps: [
-                        {
-                            range: [0, 50],
-                            color: "#FECACA"
-                        },
-                        {
-                            range: [50, 75],
-                            color: "#FDE68A"
-                        },
-                        {
-                            range: [75, 100],
-                            color: "#BBF7D0"
-                        }
-                    ]
+        [{
+            type: "indicator",
+            mode: "gauge+number",
+            value: chartData.ats,
+            number: {
+                suffix: "%",
+                font: {
+                    size: 55
                 }
+            },
+            title: {
+                text: "<b>Overall ATS Score</b>",
+                font: {
+                    size: 20
+                }
+            },
+            gauge: {
+                shape: "angular",
+                axis: {
+                    range: [0,100],
+                    tickwidth: 1,
+                    tickcolor: "#6B7280"
+                },
+                bar: {
+                    color: "#4F46E5",
+                    thickness: 0.35
+                },
+                bgcolor: "white",
+                borderwidth: 1,
+                bordercolor: "#E5E7EB",
+                steps: [
+                    {
+                        range:[0,50],
+                        color:"#FECACA"
+                    },
+                    {
+                        range:[50,75],
+                        color:"#FDE68A"
+                    },
+                    {
+                        range:[75,100],
+                        color:"#BBF7D0"
+                    }
+                ]
             }
-        ],
+        }],
         {
-            margin: {
-                t: 40,
-                b: 20,
-                l: 20,
-                r: 20
-            }
+            autosize:true,
+            height:320,
+            margin:{
+                l:25,
+                r:25,
+                t:70,
+                b:20
+            },
+            paper_bgcolor:"#FFFFFF",
+            plot_bgcolor:"#FFFFFF"
         },
         {
-            responsive: true
+            responsive:true,
+            displayModeBar:false
         }
     );
-
-    // SKILL MATCH PIE CHART
+    
+    // Skill Match
     Plotly.newPlot(
         "skillChart",
-        [
-            {
-                values: [
-                    chartData.matched,
-                    chartData.missing
-                ],
-                labels: [
-                    "Matched Skills",
-                    "Missing Skills"
-                ],
-                type: "pie",
-                hole: 0.55,
-                textinfo: "label+percent",
-                hoverinfo: "label+value+percent"
-            }
-        ],
+        [{
+            values:[
+                chartData.matched,
+                chartData.missing
+            ],
+            labels:[
+                "Matched Skills",
+                "Missing Skills"
+            ],
+            type:"pie",
+            hole:0.60,
+            textinfo:"label+percent",
+            hoverinfo:"label+value",
+            sort:false
+        }],
         {
-            margin: {
-                t: 20,
-                b: 20,
-                l: 20,
-                r: 20
+            autosize:true,
+            height:320,
+            margin:{
+                l:10,
+                r:10,
+                t:20,
+                b:20
             },
-            showlegend: true
+            showlegend:false,
+            paper_bgcolor:"#FFFFFF",
+            plot_bgcolor:"#FFFFFF"
         },
         {
-            responsive: true
+            responsive:true,
+            displayModeBar:false
         }
     );
 
-    // ATS BREAKDOWN BAR CHART
-    const breakdown = chartData.breakdown;
+    // ATS Breakdown
+    const b = chartData.breakdown;
     Plotly.newPlot(
         "breakdownChart",
-        [
-            {
-                x: [
-                    breakdown.similarity,
-                    breakdown.skills,
-                    breakdown.projects,
-                    breakdown.experience,
-                    breakdown.education,
-                    breakdown.certifications
-                ],
-                y: [
-                    "Similarity",
-                    "Skills",
-                    "Projects",
-                    "Experience",
-                    "Education",
-                    "Certificates"
-                ],
-                orientation: "h",
-                type: "bar"
+        [{
+            x:[
+                b.similarity,
+                b.skills,
+                b.projects,
+                b.experience,
+                b.education,
+                b.certifications
+            ],
+            y:[
+                "Similarity",
+                "Skills",
+                "Projects",
+                "Experience",
+                "Education",
+                "Certificates"
+            ],
+            orientation:"h",
+            type:"bar",
+            marker:{
+                color:"#4F46E5"
             }
-        ],
+        }],
         {
-            margin: {
-                l: 110,
-                r: 20,
-                t: 20,
-                b: 40
+            autosize:true,
+            height:320,
+            margin:{
+                l:120,
+                r:20,
+                t:20,
+                b:40
             },
-            xaxis: {
-                title: "Score"
-            }
+            xaxis:{
+                range:[0,40],
+                title:"Marks"
+            },
+            paper_bgcolor:"#FFFFFF",
+            plot_bgcolor:"#FFFFFF"
         },
         {
-            responsive: true
+            responsive:true,
+            displayModeBar:false
         }
     );
 }
 
-// ANALYSIS HISTORY CHART
-if (typeof historyChart !== "undefined" && historyChart.length > 0) {
+// History Chart
+if (typeof historyChart !== "undefined" && historyChart.length > 0){
     Plotly.newPlot(
         "historyChart",
-        [
-            {
-                x: historyChart.map(item => item.job),
-                y: historyChart.map(item => item.score),
-                mode: "lines+markers",
-                type: "scatter",
-                name: "ATS Score"
+        [{
+            x:historyChart.map(i=>i.job),
+            y:historyChart.map(i=>i.score),
+            mode:"lines+markers",
+            type:"scatter",
+            line:{
+                color:"#4F46E5",
+                width:3
+            },
+            marker:{
+                size:8
             }
-        ],
+        }],
         {
-            xaxis: {
-                title: "Job Role"
+            autosize:true,
+            height:320,
+            margin:{
+                l:50,
+                r:20,
+                t:20,
+                b:70
             },
-            yaxis: {
-                title: "ATS Score",
-                range: [0, 100]
+            yaxis:{
+                range:[0,100],
+                title:"ATS Score"
             },
-            margin: {
-                t: 20
-            }
+            xaxis:{
+                title:"Job Role"
+            },
+            paper_bgcolor:"#FFFFFF",
+            plot_bgcolor:"#FFFFFF"
         },
         {
-            responsive: true
+            responsive:true,
+            displayModeBar:false
         }
     );
 }
+
+// Resize Charts
+window.addEventListener("resize",function(){
+    ["atsGauge","skillChart","breakdownChart","historyChart"].forEach(function(id){
+        const chart=document.getElementById(id);
+        if(chart){
+            Plotly.Plots.resize(chart);
+        }
+    });
+
+});
