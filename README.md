@@ -168,10 +168,13 @@ http://127.0.0.1:5000
 - Multi-language resume support  
 - Multi-model AI comparison (Gemini + OpenAI)  
 - Cloud deployment (AWS / Render)
+---
 
 👨‍💻 Developed By
 Devansh Mankad
 GitHub: https://github.com/Devansh-Mankad
+
+----
 
 ## 📜 License
 This project is licensed under the MIT License.
