@@ -1,103 +1,106 @@
-def calculate_ats_score(similarity_score,resume_data,analysis_data):
+import os
+import json
+import google.generativeai as genai
+from dotenv import load_dotenv
+
+load_dotenv()
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+model = genai.GenerativeModel("gemini-2.5-flash")
+
+
+def extract_resume_information(resume_text):
     """
-    Calculate ATS Score.
-    Parameters
-    ----------
-    similarity_score : float
-        TF-IDF similarity percentage.
-
-    resume_data : dict
-        Resume information extracted by Gemini.
-
-    analysis_data : dict
-        Resume analysis returned by Gemini.
-    Returns
-    -------
-    dict
-        ATS score with detailed breakdown.
+    Extract structured information from resume using Gemini.
     """
+    prompt = f"""
+You are an expert Resume Parser.
+Extract the resume information and return ONLY valid JSON.
+Required JSON format:
+{{
+    "name": "",
+    "email": "",
+    "phone": "",
+    "skills": [],
+    "education": [],
+    "experience": [],
+    "projects": [],
+    "certifications": []
+}}
 
-    # Similarity (40 Marks)
-    similarity_marks = (similarity_score / 100) * 40
+Resume:
+{resume_text}
+"""
 
-    # Skill Match (30 Marks)
-    required_skills = analysis_data.get("required_skills",[])
-    matched_skills = analysis_data.get("matched_skills",[])
-    if required_skills:
-        skill_ratio = len(matched_skills) / len(required_skills)
-        skill_marks = skill_ratio * 30
-    else:
-        skill_marks = 30
+    try:
+        response = model.generate_content(prompt)
+        text = response.text.strip()
+        if text.startswith("```json"):
+            text = text.replace("```json", "").replace("```", "").strip()
+        elif text.startswith("```"):
+            text = text.replace("```", "").strip()
+        return json.loads(text)
 
-    # Projects (10 Marks)
-    projects = resume_data.get("projects",[])
+    except Exception as e:
+        print("Gemini Resume Extraction Error:", e)
+        return {
+            "name": "",
+            "email": "",
+            "phone": "",
+            "skills": [],
+            "education": [],
+            "experience": [],
+            "projects": [],
+            "certifications": []
+        }
 
-    if len(projects) >= 3:
-        project_marks = 10
-    elif len(projects) == 2:
-        project_marks = 8
-    elif len(projects) == 1:
-        project_marks = 5
-    else:
-        project_marks = 0
+def analyze_resume(resume_data, job_description):
+    """
+    Compare resume against job description.
+    """
+    prompt = f"""
+You are an ATS Resume Expert.
+Compare the following resume with the job description.
+Return ONLY valid JSON.
+JSON Format:
+{{
+    "company_name": "",
+    "job_title": "",
+    "required_skills": [],
+    "preferred_skills": [],
+    "matched_skills": [],
+    "missing_required_skills": [],
+    "strengths": [],
+    "weaknesses": [],
+    "recommendations": [],
+    "overall_summary": ""
+}}
 
-    # Experience (10 Marks)
-    experience = resume_data.get("experience",[])
-    if len(experience) >= 2:
-        experience_marks = 10
-    elif len(experience) == 1:
-        experience_marks = 6
-    else:
-        experience_marks = 3
+Resume:
+{json.dumps(resume_data, indent=2)}
+Job Description:
+{job_description}
+"""
 
-    # Education (5 Marks)
-    education = resume_data.get("education",[])
-    education_marks = 5 if education else 0
+    try:
+        response = model.generate_content(prompt)
+        text = response.text.strip()
+        if text.startswith("```json"):
+            text = text.replace("```json", "").replace("```", "").strip()
+        elif text.startswith("```"):
+            text = text.replace("```", "").strip()
+        return json.loads(text)
 
-    # Certifications (5 Marks)
-    certifications = resume_data.get("certifications",[])
-    certification_marks = min(len(certifications),5)
-
-    # Missing Required Skill Penalty
-    missing_required = analysis_data.get(
-        "missing_skills",
-        []
-    )
-
-    penalty = len(missing_required) * 5
-    penalty = min(penalty,20)
-
-    # Final Score
-    total_score = round(
-
-        similarity_marks
-        + skill_marks
-        + project_marks
-        + experience_marks
-        + education_marks
-        + certification_marks
-        - penalty,
-        2
-    )
-
-    total_score = max(0,min(total_score,100))
-
-    return {
-        "ats_score": total_score,
-        "breakdown": {
-            "similarity": round(
-                similarity_marks,
-                2
-            ),
-            "skills": round(
-                skill_marks,
-                2
-            ),
-            "projects": project_marks,
-            "experience": experience_marks,
-            "education": education_marks,
-            "certifications": certification_marks,
-            "penalty": penalty
-        },
-        "missing_required_skills": missing_required
-    }
+    except Exception as e:
+        print("Gemini Analysis Error:", e)
+        return {
+            "company_name": "",
+            "job_title": "Unknown",
+            "required_skills": [],
+            "preferred_skills": [],
+            "matched_skills": [],
+            "missing_required_skills": [],
+            "strengths": [],
+            "weaknesses": [],
+            "recommendations": [],
+            "overall_summary": "Unable to analyze resume."
+        }
