@@ -473,3 +473,161 @@ body{
         transform:rotate(360deg);
     }
 }
+
+/* ANALYSIS LISTS */
+.analysis-card ul,
+.recommendation-card ul{
+    margin-top:15px;
+    padding-left:20px;
+}
+
+.analysis-card li,
+.recommendation-card li{
+    margin-bottom:12px;
+    line-height:1.8;
+    color:#374151;
+}
+
+/* CHARTS */
+.chart-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:25px;
+    margin:40px 0;
+}
+
+.chart-card{
+    background:#fff;
+    border-radius:18px;
+    padding:25px;
+    box-shadow:0 8px 30px rgba(0,0,0,.08);
+}
+
+.chart-card h3{
+    margin-bottom:18px;
+    font-size:18px;
+    color:#1F2937;
+}
+
+#atsGauge,
+#skillChart,
+#breakdownChart,
+#historyChart{
+    width:100%;
+    height:350px;
+}
+
+/* ATS BREAKDOWN TABLE */
+.result-card table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.result-card table tr{
+    border-bottom:1px solid #E5E7EB;
+}
+
+.result-card table td{
+    padding:14px 10px;
+}
+
+.result-card table td:first-child{
+    font-weight:600;
+    color:#374151;
+}
+
+.result-card table td:last-child{
+    text-align:right;
+    color:#4F46E5;
+    font-weight:700;
+}
+
+/* HISTORY */
+.section-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.view-all{
+    text-decoration:none;
+    color:#4F46E5;
+    font-weight:600;
+}
+
+.badge{
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.badge.success{
+    background:#DCFCE7;
+    color:#15803D;
+}
+
+.badge.warning{
+    background:#FEF3C7;
+    color:#B45309;
+}
+
+.badge.danger{
+    background:#FEE2E2;
+    color:#B91C1C;
+}
+
+/* LOADING */
+.loading-box{
+    background:white;
+    padding:40px;
+    border-radius:18px;
+    text-align:center;
+    max-width:520px;
+    box-shadow:0 20px 50px rgba(0,0,0,.15);
+}
+
+.loading-box h2{
+    margin-top:20px;
+    color:#4F46E5;
+}
+
+.loading-box p{
+    margin-top:15px;
+    line-height:1.7;
+    color:#6B7280 !important;
+    font-size:15px !important;
+    font-weight:400 !important;
+}
+
+/* RESPONSIVE */
+@media(max-width:1200px){
+.chart-grid{
+    grid-template-columns:1fr;
+}
+.stats-grid{
+    grid-template-columns:1fr;
+}
+.result-grid{
+    grid-template-columns:1fr;
+}
+.analysis-grid{
+    grid-template-columns:1fr;
+}
+}
+
+@media(max-width:768px){
+.history-card{
+    overflow-x:auto;
+}
+.chart-card{
+    padding:18px;
+}
+#atsGauge,
+#skillChart,
+#breakdownChart,
+#historyChart{
+    height:300px;
+}
+}

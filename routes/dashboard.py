@@ -28,6 +28,8 @@ def dashboard_page():
     conn.close()
     return render_template(
         "dashboard.html",
+        analysis=None,
         history=history,
-        analysis=None
+        chart_data={},
+        history_chart=[]
     )
